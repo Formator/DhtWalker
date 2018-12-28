@@ -44,7 +44,7 @@ namespace DhtWalker2
 
         protected void Init()
         {
-            listener = new DhtListener(new IPEndPoint(IPAddress.Any, 6881));
+            listener = new DhtListener(new IPEndPoint(IPAddress.Parse(Program.options.LocalIp), 6881));
             spider = new DhtSpider(listener);
             spider.NewMetadata += Spider_NewMetadata;
 
@@ -59,7 +59,7 @@ namespace DhtWalker2
 
         protected void InitDb()
         {
-            if(!Program.NoMongo)
+            if(!Program.options.NoMongo)
             {
                 cargo = new SeedCargo();
                 spider.Filter = new MongoSeedFilter(cargo);
@@ -95,7 +95,7 @@ namespace DhtWalker2
                             var name = ((BEncodedString)metadata["name"]).Text;
                             var hash = BitConverter.ToString(info.Key.Hash).Replace("-", "");
 
-                            if (Program.SaveSeed)
+                            if (Program.options.SaveSeed)
                                 File.WriteAllBytes(@"seeds\" + hash + ".torrent", metadata.Encode());
 
                             Trace.Indent();
@@ -104,7 +104,7 @@ namespace DhtWalker2
                             Trace.Unindent();
 
 
-                            if (!Program.NoMongo)
+                            if (!Program.options.NoMongo)
                             {
                                 cargo.Add(metadata, info.Key.Hash);
                             }
@@ -139,7 +139,7 @@ namespace DhtWalker2
 
         private void Spider_NewMetadata(object sender, Tancoder.Torrent.NewMetadataEventArgs e)
         {
-            Debug.Assert(!Program.NoMongo);
+            //Debug.Assert(!Program.options.NoMongo);
             if (activeTasks.Count <= maxResolverCount && spider.GetWaitSeedsCount() > 100)
             {
                 var task = Task.Run(() => MetadataResolver(true));

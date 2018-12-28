@@ -190,6 +190,16 @@ namespace DhtWalker2
                 (
                     NodeId.Create(),
                     new IPEndPoint(Dns.GetHostEntry("dht.transmissionbt.com").AddressList[0], 6881)
+                ),
+                new Node
+                (
+                    NodeId.Create(),
+                    new IPEndPoint(Dns.GetHostEntry("router.utorrent.com").AddressList[0], 6881)
+                ),
+                new Node
+                (
+                    NodeId.Create(),
+                    new IPEndPoint(Dns.GetHostEntry("1.a.magnets.im").AddressList[0], 6881)
                 )
             };
             Start(bootstrap);
